@@ -137,7 +137,72 @@ module Apache2
         else
           '/var/log/httpd'
         end
+      end
 
+      def cache_dir
+        case node['platform_family']
+        when 'debian', 'suse'
+          '/var/cache/apache2'
+        when 'freebsd'
+          '/var/cache/apache24'
+        else
+          '/var/cache/httpd'
+        end
+      end
+
+      def lock_dir
+        case node['platform_family']
+        when 'debian'
+          '/var/lock/apache2'
+        when 'freebsd'
+          '/var/run'
+        else
+          '/var/run/httpd'
+        end
+      end
+
+      def apache_default_user
+        case node['platform_family']
+        when 'suse'
+          'wwwrun'
+        when 'debian'
+          'www-data'
+        when 'arch'
+          'http'
+        when 'freebsd'
+          'www'
+        else
+          'apache'
+        end
+      end
+
+      def default_modules
+        default_modules = %w(status alias auth_basic authn_core authn_file authz_core authz_groupfile
+                             authz_host authz_user autoindex deflate dir env mime negotiation setenvif)
+
+        case node['platform_family']
+        when 'rhel', 'fedora', 'amazon'
+          default_modules.concat %w(log_config logio unixd)
+          default_modules.concat %w(systemd) if node['init_package'] == 'systemd'
+          default_modules
+        when 'arch', 'freebsd'
+          default_modules << %w(log_config logio unixd)
+        when 'suse'
+          default_modules << %w(log_config logio)
+        else
+          default_modules
+        end
+      end
+
+      def mpm_support
+        case node['platform']
+        when 'debian'
+          'worker'
+        when 'linuxmint', 'ubuntu'
+          'event'
+        else
+          'prefork'
+        end
       end
     end
   end
