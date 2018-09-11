@@ -127,6 +127,18 @@ module Apache2
           'httpd'
         end
       end
+
+      def log_dir
+        case node['platform_family']
+        when 'debian', 'suse'
+          '/var/log/apache2'
+        when 'freebsd'
+          '/var/log'
+        else
+          '/var/log/httpd'
+        end
+
+      end
     end
   end
 end
