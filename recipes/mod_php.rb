@@ -27,7 +27,9 @@ end
 
 case node['platform_family']
 when 'debian'
-  if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 16.04
+  if node['apache']['mod_php']['package_name']
+    package node['apache']['mod_php']['package_name']
+  elsif node['platform'] == 'ubuntu' && node['platform_version'].to_f < 16.04
     package 'libapache2-mod-php5'
   elsif node['platform'] == 'debian' && node['platform_version'].to_f < 9
     package 'libapache2-mod-php5'

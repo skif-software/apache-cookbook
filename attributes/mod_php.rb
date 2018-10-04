@@ -17,6 +17,7 @@
 # limitations under the License.
 
 default['apache']['mod_php']['install_method'] = 'package'
+default['apache']['mod_php']['package_name']   = nil
 default['apache']['mod_php']['module_name'] = 'php5'
 default['apache']['mod_php']['so_filename'] = 'libphp5.so'
 default['apache']['mod_php']['so_filename'] = 'mod_php5.so' if node['platform_family'] == 'suse'
